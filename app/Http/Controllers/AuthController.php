@@ -7,14 +7,13 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Responses\ApiResponse;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     public function register(RegisterRequest $request) {
-        $user = User::where("email", $request->get("email"))->exists();
-
-        if ($user) {
-            return ApiResponse::conflict('User with this email already exists');
+        if (User::where("email", $request->get("email"))->exists()) {
+            return ApiResponse::conflict('emailAlreadyExists');
         }
         
         return ApiResponse::ok(
@@ -29,14 +28,17 @@ class AuthController extends Controller
     public function login(Request $request) {
         $user = User::where("email", $request->get("email"))->first();
 
-        if (!$user) {
-            return ApiResponse::notFound('User not found');
+        if (!$user || !Hash::check($request->get("password"), $user->password)) {
+            return ApiResponse::notFound('invalidCredentials');
         }
 
-        if (!Hash::check($request->get("password"), $user->password)) {
-            return ApiResponse::notFound('Invalid credentials');
-        }
+        $token = JWTAuth::fromUser($user);
+        $expiresIn = JWTAuth::factory()->getTTL() * 60;
 
-        return ApiResponse::ok($user->toArray());
+        return ApiResponse::ok([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $expiresIn
+        ]);
     }
 }
