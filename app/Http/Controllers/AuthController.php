@@ -19,12 +19,12 @@ class AuthController extends Controller
             return ApiResponse::conflict('emailAlreadyExists');
         }
 
-        return ApiResponse::ok(
+        return ApiResponse::created(
             User::create([
                 'name' => $request->get('name'),
                 'email' => $request->get('email'),
                 'password' => Hash::make($request->get('password')),
-            ])
+            ])->toArray()
         );
     }
 
