@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Http\Controllers;
+
 use App\Http\Requests\IntegrationSettingRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\IntegrationSetting;
@@ -23,7 +24,7 @@ class IntegrationSettingController extends Controller
         return ApiResponse::created($IntegrationSetting->toArray());
     }
 
-    public function delete(int $id): ApiResponse 
+    public function delete(int $id): ApiResponse
     {
         $IntegrationSetting = IntegrationSetting::find($id);
         $IntegrationSetting->delete();
