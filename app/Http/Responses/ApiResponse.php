@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Responses;
 
 use Illuminate\Contracts\Support\Responsable;
@@ -6,8 +7,11 @@ use Illuminate\Contracts\Support\Responsable;
 class ApiResponse implements Responsable
 {
     protected int $httpCode;
+
     protected array $data;
+
     protected string $message;
+
     protected string $success;
 
     public function __construct(int $httpCode, array $data = [], string $message = '', bool $success = false)
@@ -29,7 +33,7 @@ class ApiResponse implements Responsable
         return response()->json($payload, $this->httpCode, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public static function ok(array $data)
+    public static function ok(array $data = [])
     {
         return new static(200, $data);
     }
@@ -39,19 +43,23 @@ class ApiResponse implements Responsable
         return new static(201, $data);
     }
 
-    public static function notFound(string $message = "entityNotFound")
+    public static function notFound(string $message = 'entityNotFound')
     {
         return new static(404, message: $message);
     }
 
-    public static function badRequest(string $message = "validationError")
+    public static function badRequest(string $message = 'validationError')
     {
         return new static(400, message: $message);
     }
 
-    public static function conflict(string $message = "resourceAlreadyExists")
+    public static function conflict(string $message = 'resourceAlreadyExists')
     {
         return new static(409, message: $message);
     }
+
+    public static function unauthenticated(string $message = 'unauthenticated')
+    {
+        return new static(401, message: $message);
+    }
 }
-?>

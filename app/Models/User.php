@@ -46,7 +46,7 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-      /**
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
@@ -64,5 +64,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function workspaces()
+    {
+        return $this->belongsToMany(Workspace::class)->withPivot('current');
     }
 }
