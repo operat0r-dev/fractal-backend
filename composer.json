@@ -20,6 +20,7 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
         "phpunit/phpunit": "^11.0.1",
+        "slevomat/coding-standard": "*",
         "squizlabs/php_codesniffer": "*"
     },
     "autoload": {
@@ -51,7 +52,7 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "fix": [
-            "./vendor/bin/phpcbf --standard=./php-cs.xml --extensions=php app/ database/seeders/ --ignore=app/Streamax/Models/TrackEye/*"
+            "./vendor/bin/phpcbf --standard=./php-cs.xml --extensions=php app/ database/seeders/"
         ]
     },
     "extra": {
