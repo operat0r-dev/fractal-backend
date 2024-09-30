@@ -15,7 +15,7 @@ class ApiResponse implements Responsable
 
     protected string $message;
 
-    protected string $success;
+    protected bool $success;
 
     public function __construct(int $httpCode, array $data = [], string $message = '', bool $success = false)
     {
