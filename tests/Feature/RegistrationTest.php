@@ -4,14 +4,13 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_registers_a_user(): void
+    public function testItRegistersAUser(): void
     {
         $response = $this->post('/api/register', [
             'name' => 'Jogn Doe',
@@ -26,7 +25,7 @@ class RegistrationTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function test_it_fails_registration_with_invalid_email(): void
+    public function testItFailsWithInvalidEmail(): void
     {
         $response = $this->post('/api/register', [
             'name' => 'Jogn Doe',
@@ -38,7 +37,7 @@ class RegistrationTest extends TestCase
         $response->assertStatus(400);
     }
 
-    public function test_it_fails_registration_with_different_password_confirmation(): void
+    public function testItFailsWithDifferentPasswordConfirmation(): void
     {
         $response = $this->post('/api/register', [
             'name' => 'Jogn Doe',
@@ -50,7 +49,7 @@ class RegistrationTest extends TestCase
         $response->assertStatus(400);
     }
 
-    public function test_user_cannot_register_with_existing_mail(): void
+    public function testFailsWithExistingEmail(): void
     {
         $user = User::factory()->create([
             'email' => 'existinguser@example.com',

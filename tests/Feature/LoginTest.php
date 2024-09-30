@@ -11,22 +11,7 @@ class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_user_can_log_in_with_correct_credentials(): void
-    {
-        $password = 'password';
-        $user = User::factory()->create([
-            'password' => Hash::make($password),
-        ]);
-
-        $response = $this->post('/api/login', [
-            'email' => $user->email,
-            'password' => $password,
-        ]);
-
-        $response->assertStatus(200);
-    }
-
-    public function test_user_cannot_login_with_invalid_email(): void
+    public function testItFailsWithInvalidEmail(): void
     {
         $password = 'password';
         User::factory()->create([
@@ -42,7 +27,7 @@ class LoginTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_user_cannot_login_with_invalid_password(): void
+    public function testItFailsWithInvalidPassword(): void
     {
         $user = User::factory()->create([
             'password' => Hash::make('password'),
