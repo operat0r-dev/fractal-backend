@@ -11,6 +11,16 @@ use Auth;
 
 class IntegrationSettingController extends Controller
 {
+
+    public function index(): ApiResponse
+    {
+        $user = Auth::user();
+
+        $IntegrationSetting = IntegrationSetting::where("user_id", $user->id)->get();
+
+        return ApiResponse::ok($IntegrationSetting->toArray());
+    }
+
     public function store(IntegrationSettingRequest $request): ApiResponse
     {
         $user = Auth::user();

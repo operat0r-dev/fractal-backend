@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user/workspaces', [WorkspaceController::class, 'getUserWorkspaces']);
     Route::patch('/user/set-user-workspace', [WorkspaceController::class, 'setUserWorkspace']);
 
+    Route::get('/integration_setting', [IntegrationSettingController::class, 'index']);
     Route::post('/integration_setting/create', [IntegrationSettingController::class, 'store']);
     Route::patch('/integration_setting/update/{id}', [IntegrationSettingController::class, 'update']);
     Route::get('/integration_setting/delete/{id}', [IntegrationSettingController::class, 'delete']);
