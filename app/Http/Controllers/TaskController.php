@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request): ApiResponse
     {
         $task = Task::create([
             'title' => $request->get('title'),
@@ -21,7 +21,7 @@ class TaskController extends Controller
         return ApiResponse::created($task->toArray());
     }
 
-    public function move(Request $request, int $id)
+    public function move(Request $request, int $id): ApiResponse
     {
         $task = Task::find($id);
 
@@ -33,7 +33,7 @@ class TaskController extends Controller
         return ApiResponse::ok();
     }
 
-    public function reorder(Request $request, int $id)
+    public function reorder(Request $request, int $id): ApiResponse
     {
         $task = Task::find($id);
 

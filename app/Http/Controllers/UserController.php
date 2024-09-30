@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function update(Request $request)
+    public function update(Request $request): ApiResponse
     {
         $user = Auth::user();
 

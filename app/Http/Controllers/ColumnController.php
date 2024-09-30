@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ColumnController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request): ApiResponse
     {
         $column = Column::create([
             'name' => $request->get('name'),
@@ -23,7 +23,7 @@ class ColumnController extends Controller
         return ApiResponse::created($column->toArray());
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): ApiResponse
     {
         $column = Column::find($id);
 

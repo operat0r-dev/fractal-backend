@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class BoardController extends Controller
 {
-    public function index(int $id)
+    public function index(int $id): ApiResponse
     {
         $board = Board::with(['columns', 'columns.tasks' => function ($query) {
             $query->orderBy('seq', 'asc');
@@ -19,7 +19,7 @@ class BoardController extends Controller
         return ApiResponse::ok($board->toArray());
     }
 
-    public function store(Request $request)
+    public function store(Request $request): ApiResponse
     {
         $board = Board::create([
             'name' => $request->get('name'),

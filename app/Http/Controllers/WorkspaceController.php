@@ -21,7 +21,7 @@ class WorkspaceController extends Controller
         $this->workspaceService = $workspaceService;
     }
 
-    public function store(Request $request)
+    public function store(Request $request): ApiResponse
     {
         $user = Auth::user();
 
@@ -36,7 +36,7 @@ class WorkspaceController extends Controller
         );
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): ApiResponse
     {
         $workspace = Workspace::find($id);
 
@@ -47,7 +47,7 @@ class WorkspaceController extends Controller
         return ApiResponse::ok($workspace->toArray());
     }
 
-    public function getUserWorkspaces()
+    public function getUserWorkspaces(): ApiResponse
     {
         $user = Auth::user();
 
@@ -62,7 +62,7 @@ class WorkspaceController extends Controller
         return ApiResponse::ok($workspaces->toArray());
     }
 
-    public function setUserWorkspace(Request $request)
+    public function setUserWorkspace(Request $request): ApiResponse
     {
         $user = Auth::user();
 
@@ -72,7 +72,7 @@ class WorkspaceController extends Controller
         return ApiResponse::ok();
     }
 
-    public function getOne(Request $request, int $id)
+    public function getOne(Request $request, int $id): ApiResponse
     {
         try {
             $workspace = Workspace::with('boards')->find($id);

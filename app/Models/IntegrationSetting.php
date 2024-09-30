@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
  * @property string $type
  * @property string|null $value
+ * @property int $user_id
  */
 class IntegrationSetting extends Model
 {
@@ -18,6 +20,7 @@ class IntegrationSetting extends Model
         'id',
         'type',
         'value',
+        'user_id',
     ];
 
     public function getType(): string
@@ -40,5 +43,10 @@ class IntegrationSetting extends Model
     {
         $this->value = $value;
         return $this;
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -39,7 +39,7 @@ class TrelloService
         return $boards;
     }
 
-    public function createCard($listId, $name, $description, $attachments = [])
+    public function createCard(int $listId, string $name, string $description)
     {
         $response = $this->client->post("cards", [
             'query' => [
@@ -55,7 +55,7 @@ class TrelloService
         return json_decode($body, true);
     }
 
-    public function createReportListIfNotExists($boardId, $listName)
+    public function createReportListIfNotExists(int $boardId, string $listName)
     {
         $lists = $this->getLists($boardId);
         foreach ($lists as $list) {
@@ -76,7 +76,7 @@ class TrelloService
         return json_decode($response->getBody(), true);
     }
 
-    public function getLists($boardId)
+    public function getLists(int $boardId)
     {
         $response = $this->client->get("boards/{$boardId}/lists", [
             'query' => [
