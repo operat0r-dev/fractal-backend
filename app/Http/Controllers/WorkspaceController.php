@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Responses\ApiResponse;
@@ -77,7 +79,6 @@ class WorkspaceController extends Controller
 
             return ApiResponse::ok($workspace->toArray());
         } catch (Exception $e) {
-
         }
     }
 }

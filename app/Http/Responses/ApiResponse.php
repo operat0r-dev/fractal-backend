@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Responses;
 
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\JsonResponse;
 
 class ApiResponse implements Responsable
 {
@@ -22,7 +25,7 @@ class ApiResponse implements Responsable
         $this->success = $success;
     }
 
-    public function toResponse($request): \Illuminate\Http\JsonResponse
+    public function toResponse($request): JsonResponse
     {
         $payload = match (true) {
             $this->httpCode >= 500 => ['message' => 'internalServerError', 'success' => false],
