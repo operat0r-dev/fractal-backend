@@ -18,7 +18,8 @@ class Column extends Model
         'id',
         'name',
         'board_id',
-        'seq'
+        'seq',
+        'color'
     ];
 
     public function tasks()
