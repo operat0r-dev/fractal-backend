@@ -17,7 +17,7 @@ class LabelRequest extends FormRequest
     {
         return [
             'name'  => 'required|string',
-            'string'  => 'required|string',
+            'color'  => 'required|string',
             'board_id'=> 'required|integer',
         ];
     }

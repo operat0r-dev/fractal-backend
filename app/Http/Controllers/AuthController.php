@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\User;
+use App\Services\WorkspaceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,19 +16,27 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    public WorkspaceService $workspaceService;
+
+    public function __construct(WorkspaceService $workspaceService)
+    {
+        $this->workspaceService = $workspaceService;
+    }
     public function register(RegisterRequest $request)
     {
         if (User::where('email', $request->get('email'))->exists()) {
             return ApiResponse::conflict('emailAlreadyExists');
         }
 
-        return ApiResponse::created(
-            User::create([
-                'name' => $request->get('name'),
-                'email' => $request->get('email'),
-                'password' => Hash::make($request->get('password')),
-            ])->toArray()
-        );
+        $user = User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+        ]);
+
+        $workspace = $this->workspaceService->createDefaultWorkspace('Default', $user);
+
+        return ApiResponse::created($user->toArray());
     }
 
     public function login(Request $request)
