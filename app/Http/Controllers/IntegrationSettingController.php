@@ -34,14 +34,6 @@ class IntegrationSettingController extends Controller
         return ApiResponse::created($IntegrationSetting->toArray());
     }
 
-    public function delete(int $id): ApiResponse
-    {
-        $IntegrationSetting = IntegrationSetting::find($id);
-        $IntegrationSetting->delete();
-
-        return ApiResponse::ok();
-    }
-
     public function update(IntegrationSettingRequest $request, int $id): ApiResponse
     {
         $user = Auth::user();
@@ -55,5 +47,13 @@ class IntegrationSettingController extends Controller
         $IntegrationSetting->save();
 
         return ApiResponse::created($IntegrationSetting->toArray());
+    }
+
+    public function delete(int $id): ApiResponse
+    {
+        $IntegrationSetting = IntegrationSetting::find($id);
+        $IntegrationSetting->delete();
+
+        return ApiResponse::ok();
     }
 }

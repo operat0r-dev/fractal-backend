@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ColumnController;
 use App\Http\Controllers\IntegrationSettingController;
+use App\Http\Controllers\LabelController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkspaceController;
@@ -11,31 +12,38 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth:api'], function () {
     // Route::post('refresh', 'AuthController@refresh');
-    Route::get('/me', [AuthController::class, 'me']);
+    Route::GET('/me', [AuthController::class, 'me']);
 
-    Route::patch('/update', [UserController::class, 'update']);
+    Route::PATCH('/update', [UserController::class, 'update']);
 
-    Route::post('/workspace/create', [WorkspaceController::class, 'store']);
-    Route::patch('/workspace/update/{id}', [WorkspaceController::class, 'update']);
-    Route::get('/workspace/{id}', [WorkspaceController::class, 'getOne']);
+    Route::POST('/workspace/create', [WorkspaceController::class, 'store']);
+    Route::PATCH('/workspace/update/{id}', [WorkspaceController::class, 'update']);
+    Route::GET('/workspace/{id}', [WorkspaceController::class, 'getOne']);
 
-    Route::get('/boards/{id}', [BoardController::class, 'index']);
-    Route::post('/board/store', [BoardController::class, 'store']);
+    Route::GET('/boards/{id}', [BoardController::class, 'index']);
+    Route::POST('/board/store', [BoardController::class, 'store']);
 
-    Route::post('/column/store', [ColumnController::class, 'store']);
-    Route::put('/column/{id}', [ColumnController::class, 'update']);
+    Route::POST('/column/store', [ColumnController::class, 'store']);
+    Route::PUT('/column/{id}', [ColumnController::class, 'update']);
 
-    Route::post('/task/store', [TaskController::class, 'store']);
-    Route::put('/task/move/{id}', [TaskController::class, 'move']);
-    Route::put('/task/reorder/{id}', [TaskController::class, 'reorder']);
+    Route::POST('/task/store', [TaskController::class, 'store']);
+    Route::PUT('/task/move/{id}', [TaskController::class, 'move']);
+    Route::PUT('/task/reorder/{id}', [TaskController::class, 'reorder']);
 
-    Route::get('/user/workspaces', [WorkspaceController::class, 'getUserWorkspaces']);
-    Route::patch('/user/set-user-workspace', [WorkspaceController::class, 'setUserWorkspace']);
+    Route::GET('/user/workspaces', [WorkspaceController::class, 'getUserWorkspaces']);
+    Route::PATCH('/user/set-user-workspace', [WorkspaceController::class, 'setUserWorkspace']);
 
-    Route::get('/integration_setting', [IntegrationSettingController::class, 'index']);
-    Route::post('/integration_setting/create', [IntegrationSettingController::class, 'store']);
-    Route::patch('/integration_setting/update/{id}', [IntegrationSettingController::class, 'update']);
-    Route::get('/integration_setting/delete/{id}', [IntegrationSettingController::class, 'delete']);
+    Route::GET('/integration_setting', [IntegrationSettingController::class, 'index']);
+    Route::POST('/integration_setting/create', [IntegrationSettingController::class, 'store']);
+    Route::PATCH('/integration_setting/update/{id}', [IntegrationSettingController::class, 'update']);
+    Route::GET('/integration_setting/delete/{id}', [IntegrationSettingController::class, 'delete']);
+
+    Route::GET('/label', [LabelController::class, 'index']);
+    Route::POST('/label/create', [LabelController::class, 'store']);
+    Route::PATCH('/label/update/{id}', [LabelController::class, 'update']);
+    Route::GET('/label/delete/{id}', [LabelController::class, 'delete']);
+    Route::POST('/label/{taskId}/assign/{labelId}', [LabelController::class, 'assign']);
+    Route::POST('/label/{taskId}/unassign/{labelId}', [LabelController::class, 'unassign']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);

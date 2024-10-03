@@ -4,17 +4,31 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @property int $id
+ * @property string $title
+ * @property int $column_id
+ * @property int $seq
+ */
 class Task extends Model
 {
-    use HasFactory;
-
-    protected $guarded = [];
+    protected $fillable = [
+        'id',
+        'title',
+        'column_id',
+        'seq'
+    ];
 
     public function column()
     {
         return $this->belongTo(Column::class);
+    }
+
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Label::class);
     }
 }

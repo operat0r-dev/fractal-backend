@@ -12,9 +12,13 @@ class BoardController extends Controller
 {
     public function index(int $id): ApiResponse
     {
-        $board = Board::with(['columns', 'columns.tasks' => function ($query) {
-            $query->orderBy('seq', 'asc');
-        }])->find($id);
+        $board = Board::with([
+            'columns', 
+            'columns.tasks' => function ($query) {
+                $query->orderBy('seq', 'asc');
+            },
+            'columns.tasks.labels' 
+        ])->find($id);
 
         return ApiResponse::ok($board->toArray());
     }
@@ -23,7 +27,7 @@ class BoardController extends Controller
     {
         $board = Board::create([
             'name' => $request->get('name'),
-            'workspace_id' => $request->get('workspaceId'),
+            'workspace_id' => $request->get('workspace_id'),
         ]);
 
         return ApiResponse::ok($board->toArray());

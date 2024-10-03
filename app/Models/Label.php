@@ -5,25 +5,26 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
  * @property string $name
+ * @property string $color
  * @property int $board_id
- * @property int $seq
  */
-class Column extends Model
+class Label extends Model
 {
     protected $fillable = [
         'id',
         'name',
-        'board_id',
-        'seq'
+        'color',
+        'board_id'
     ];
 
-    public function tasks()
+    public function tasks(): BelongsToMany
     {
-        return $this->hasMany(Task::class);
+        return $this->belongsToMany(Task::class);
     }
 
     public function board()
