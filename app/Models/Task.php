@@ -22,6 +22,11 @@ class Task extends Model
         'seq'
     ];
 
+    protected $hidden = [
+        'created_at',  
+        'updated_at',  
+    ];
+
     public function column()
     {
         return $this->belongTo(Column::class);

@@ -23,6 +23,11 @@ class LabelTask extends Model
         'task_id',
     ];
 
+    protected $hidden = [
+        'created_at',  
+        'updated_at',  
+    ];
+
     public function board(): BelongsTo
     {
         return $this->belongsTo(Board::class);

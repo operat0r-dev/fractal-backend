@@ -22,6 +22,11 @@ class Label extends Model
         'board_id'
     ];
 
+    protected $hidden = [
+        'created_at',  
+        'updated_at',  
+    ];
+
     public function tasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class);

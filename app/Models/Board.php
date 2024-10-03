@@ -20,6 +20,11 @@ class Board extends Model
         'workspace_id',
     ];
 
+    protected $hidden = [
+        'created_at',  
+        'updated_at',  
+    ];
+
     public function workspace(): mixed
     {
         return $this->belongTo(Workspace::class);
