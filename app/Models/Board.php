@@ -4,22 +4,34 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property int $workspace_id
+ */
 class Board extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'id',
+        'name',
+        'workspace_id',
+    ];
 
-    protected $guarded = [];
-
-    public function workspace()
+    public function workspace(): mixed
     {
         return $this->belongTo(Workspace::class);
     }
 
-    public function columns()
+    public function columns(): HasMany
     {
         return $this->hasMany(Column::class);
+    }
+
+    public function labels()
+    {
+        return $this->hasMany(Label::class);
     }
 }
