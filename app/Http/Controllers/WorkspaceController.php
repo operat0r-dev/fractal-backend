@@ -24,8 +24,9 @@ class WorkspaceController extends Controller
     public function store(Request $request): ApiResponse
     {
         $user = Auth::user();
+        $name = $request->get("name");
 
-        $workspace = $this->workspaceService->createWorkspace($request, $user);
+        $workspace = $this->workspaceService->createWorkspace($name, $user);
 
         return ApiResponse::ok(
             [

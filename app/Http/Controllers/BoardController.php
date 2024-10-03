@@ -13,11 +13,11 @@ class BoardController extends Controller
     public function index(int $id): ApiResponse
     {
         $board = Board::with([
-            'columns', 
+            'columns',
             'columns.tasks' => function ($query) {
                 $query->orderBy('seq', 'asc');
             },
-            'columns.tasks.labels' 
+            'columns.tasks.labels'
         ])->find($id);
 
         return ApiResponse::ok($board->toArray());
