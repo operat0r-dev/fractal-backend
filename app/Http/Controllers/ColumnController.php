@@ -12,11 +12,9 @@ class ColumnController extends Controller
 {
     public function store(Request $request): ApiResponse
     {
-        $column = Column::create([
-            'name' => $request->get('name'),
-            'board_id' => $request->get('board_id'),
-            'seq' => $request->get('seq'),
-        ]);
+        $column = Column::create(
+            $request->only(['name', 'board_id', 'seq', 'color']),
+        );
 
         $column->load('tasks');
 
