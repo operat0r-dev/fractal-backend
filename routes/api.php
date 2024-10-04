@@ -15,6 +15,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::GET('/me', [AuthController::class, 'me']);
 
     Route::PATCH('/update', [UserController::class, 'update']);
+    Route::GET('/users/email/{email}', [UserController::class, 'getUserByEmail']);
+    Route::POST('/workspace/{workspaceId}/invite', [UserController::class, 'inviteUserToWorkspace']);
 
     Route::POST('/workspace/create', [WorkspaceController::class, 'store']);
     Route::PATCH('/workspace/update/{id}', [WorkspaceController::class, 'update']);
