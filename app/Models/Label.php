@@ -19,12 +19,12 @@ class Label extends Model
         'id',
         'name',
         'color',
-        'board_id'
+        'board_id',
     ];
 
     protected $hidden = [
-        'created_at',  
-        'updated_at',  
+        'created_at',
+        'updated_at',
     ];
 
     public function tasks(): BelongsToMany

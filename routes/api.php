@@ -27,8 +27,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::PUT('/column/{id}', [ColumnController::class, 'update']);
 
     Route::POST('/task/store', [TaskController::class, 'store']);
-    Route::PUT('/task/move/{id}', [TaskController::class, 'move']);
-    Route::PUT('/task/reorder/{id}', [TaskController::class, 'reorder']);
+    Route::PUT('/task/update/{id}', [TaskController::class, 'update']);
 
     Route::GET('/user/workspaces', [WorkspaceController::class, 'getUserWorkspaces']);
     Route::PATCH('/user/set-user-workspace', [WorkspaceController::class, 'setUserWorkspace']);
@@ -38,12 +37,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::PATCH('/integration_setting/update/{id}', [IntegrationSettingController::class, 'update']);
     Route::GET('/integration_setting/delete/{id}', [IntegrationSettingController::class, 'delete']);
 
-    Route::GET('/label', [LabelController::class, 'index']);
+    Route::GET('/label/{boardId}', [LabelController::class, 'index']);
     Route::POST('/label/create', [LabelController::class, 'store']);
     Route::PATCH('/label/update/{id}', [LabelController::class, 'update']);
     Route::GET('/label/delete/{id}', [LabelController::class, 'delete']);
-    Route::POST('/label/{taskId}/assign/{labelId}', [LabelController::class, 'assign']);
-    Route::POST('/label/{taskId}/unassign/{labelId}', [LabelController::class, 'unassign']);
+    Route::POST('/label/{taskId}/assign', [LabelController::class, 'assign']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);

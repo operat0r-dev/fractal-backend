@@ -7,14 +7,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LabelRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Label;
-use App\Models\LabelTask;
 use App\Models\Task;
+use Illuminate\Http\Request;
 
 class LabelController extends Controller
 {
     public function index(int $boardId): ApiResponse
     {
         $labels = Label::where('board_id', $boardId)->get();
+
         return ApiResponse::ok($labels->toArray());
     }
 
@@ -50,28 +51,13 @@ class LabelController extends Controller
         return ApiResponse::ok();
     }
 
-    public function assign(int $taskId, int $labelId): ApiResponse
+    public function assign(Request $request, int $taskId): ApiResponse
     {
         $task = Task::findOrFail($taskId);
-        $label = Label::findOrFail($labelId);
+        $task->labels()->sync(array_values($request->get('label_ids')));
 
-        $assigned = LabelTask::create([
-            'task_id' => $task->id,
-            'label_id' => $label->id,
-        ]);
-        $assigned->save();
+        $task->load('labels');
 
-        return ApiResponse::ok();
-    }
-
-    public function unassign(int $taskId, int $labelId): ApiResponse
-    {
-        $assigned = LabelTask::where('task_id', $taskId)
-            ->where('label_id', $labelId)
-            ->first();
-
-        $assigned->delete();
-
-        return ApiResponse::ok();
+        return ApiResponse::ok($task->toArray());
     }
 }

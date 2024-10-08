@@ -19,12 +19,12 @@ class Task extends Model
         'id',
         'title',
         'column_id',
-        'seq'
+        'seq',
     ];
 
     protected $hidden = [
-        'created_at',  
-        'updated_at',  
+        'created_at',
+        'updated_at',
     ];
 
     public function column()
@@ -34,6 +34,6 @@ class Task extends Model
 
     public function labels(): BelongsToMany
     {
-        return $this->belongsToMany(Label::class);
+        return $this->belongsToMany(Label::class)->withPivot('id');
     }
 }
