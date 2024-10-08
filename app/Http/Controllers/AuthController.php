@@ -81,6 +81,8 @@ class AuthController extends Controller
             return ApiResponse::notFound();
         }
 
+        $user->load('workspaces');
+
         return ApiResponse::ok($user->toArray());
     }
 }
