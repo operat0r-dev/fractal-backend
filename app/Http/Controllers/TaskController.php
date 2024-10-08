@@ -18,28 +18,16 @@ class TaskController extends Controller
             'seq' => $request->get('seq'),
         ]);
 
+        $task->load('labels');
+
         return ApiResponse::created($task->toArray());
     }
 
-    public function move(Request $request, int $id): ApiResponse
+    public function update(Request $request, int $id): ApiResponse
     {
         $task = Task::find($id);
 
-        $task->update([
-            'column_id' => $request->get('column_id'),
-            'seq' => $request->get('seq'),
-        ]);
-
-        return ApiResponse::ok();
-    }
-
-    public function reorder(Request $request, int $id): ApiResponse
-    {
-        $task = Task::find($id);
-
-        $task->update([
-            'seq' => $request->get('seq'),
-        ]);
+        $task->update($request->only(['column_id', 'seq']));
 
         return ApiResponse::ok();
     }
