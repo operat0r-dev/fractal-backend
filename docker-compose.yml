@@ -1,0 +1,57 @@
+version: "3.7"
+services:
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            args:
+                uid: 1000
+                user: ${USER}
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+        - ./:/var/www
+        networks:
+        - fractal
+
+    db:
+        image: mysql:8.0
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+        - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+        networks:
+        - fractal
+
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+        - 8000:80
+        volumes:
+        - ./:/var/www
+        - ./docker-compose/nginx:/etc/nginx/conf.d/
+        networks:
+        - fractal
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        restart: unless-stopped
+        environment:
+            PMA_HOST: ${DB_HOST}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - 8080:80
+        networks:
+            - fractal
+
+
+networks:
+    fractal:
+        driver: bridge
