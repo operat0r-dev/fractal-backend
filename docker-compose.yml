@@ -1,19 +1,5 @@
 version: "3.7"
 services:
-    app:
-        build:
-            context: ./
-            dockerfile: Dockerfile
-            args:
-                uid: 1000
-                user: ${USER}
-        restart: unless-stopped
-        working_dir: /var/www/
-        volumes:
-        - ./:/var/www
-        networks:
-        - fractal
-
     db:
         image: mysql:8.0
         restart: unless-stopped
@@ -29,16 +15,18 @@ services:
         networks:
         - fractal
 
-    nginx:
-        image: nginx:alpine
-        restart: unless-stopped
-        ports:
-        - 8000:80
+    fractal-backend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        env_file:
+        - .env
         volumes:
-        - ./:/var/www
-        - ./docker-compose/nginx:/etc/nginx/conf.d/
+        - ./fractal-backend:/var/www/html
         networks:
         - fractal
+        ports:
+        - 8000:8000
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -47,9 +35,9 @@ services:
             PMA_HOST: ${DB_HOST}
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
         ports:
-            - 8080:80
+        - 8080:8080
         networks:
-            - fractal
+        - fractal
 
 
 networks:
