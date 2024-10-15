@@ -1,5 +1,31 @@
-version: "3.7"
 services:
+    reverse-proxy:
+        image: traefik:v3.1
+        command: --api.insecure=true --providers.docker
+        ports:
+        - "80:80"
+        - "8080:8080"
+        volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+        - fractal
+
+    fractal-backend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        env_file:
+        - .env
+        labels:
+        - "traefik.http.routers.fractal-backend.rule=PathPrefix(`/apps/backend`)"
+        - "traefik.http.middlewares.fractal-backend.redirectregex.regex=^(.*)/apps/backend$$"
+        - "traefik.http.middlewares.fractal-backend-stripprefix.stripprefix.prefixes=/apps/backend"
+        - "traefik.http.routers.backend-secure.middlewares=backend-secure-stripprefix"
+        - "traefik.http.middlewares.backend-secure-stripprefix.stripprefix.prefixes=/apps/backend"
+        - "traefik.http.services.backend.loadbalancer.server.port=8000"
+        networks:
+            - fractal
+
     db:
         image: mysql:8.0
         restart: unless-stopped
@@ -11,35 +37,9 @@ services:
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
         volumes:
-        - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+          - ./db:/var/lib/mysql
         networks:
         - fractal
-
-    fractal-backend:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        env_file:
-        - .env
-        volumes:
-        - ./fractal-backend:/var/www/html
-        networks:
-        - fractal
-        ports:
-        - 8000:8000
-
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        restart: unless-stopped
-        environment:
-            PMA_HOST: ${DB_HOST}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-        ports:
-        - 8080:8080
-        networks:
-        - fractal
-
 
 networks:
     fractal:
-        driver: bridge
