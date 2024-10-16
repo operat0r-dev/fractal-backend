@@ -14,7 +14,8 @@ class MailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string'
+            'ids' => 'required|array',
+            'ids.*' => 'integer'
         ];
     }
 }

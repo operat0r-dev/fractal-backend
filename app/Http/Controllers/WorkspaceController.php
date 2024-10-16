@@ -24,7 +24,7 @@ class WorkspaceController extends Controller
     public function store(Request $request): ApiResponse
     {
         $user = Auth::user();
-        $name = $request->get("name");
+        $name = $request->get('name');
 
         $workspace = $this->workspaceService->createWorkspace($name, $user);
 
@@ -32,6 +32,7 @@ class WorkspaceController extends Controller
             [
                 'id' => $workspace->id,
                 'name' => $workspace->name,
+                'description' => $workspace->description,
                 'current' => $workspace->pivot->current,
             ]
         );
@@ -41,9 +42,7 @@ class WorkspaceController extends Controller
     {
         $workspace = Workspace::find($id);
 
-        $workspace->update([
-            'name' => $request->get('name'),
-        ]);
+        $workspace->update($request->only(['name', 'description']));
 
         return ApiResponse::ok($workspace->toArray());
     }
@@ -57,6 +56,7 @@ class WorkspaceController extends Controller
                 'id' => $workspace->id,
                 'name' => $workspace->name,
                 'current' => $workspace->pivot->current,
+                'description' => $workspace->description
             ];
         });
 
@@ -76,7 +76,7 @@ class WorkspaceController extends Controller
     public function getOne(Request $request, int $id): ApiResponse
     {
         try {
-            $workspace = Workspace::with('boards')->find($id);
+            $workspace = Workspace::with(['boards', 'users'])->find($id);
 
             return ApiResponse::ok($workspace->toArray());
         } catch (Exception $e) {

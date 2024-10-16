@@ -32,13 +32,9 @@ class UserController extends Controller
 
     public function getUserByEmail(Request $request, string $email): ApiResponse
     {
-        $user = User::where('email', $email)->first();
+        $users = User::where('email', 'LIKE', '%'.$email.'%')->orWhere('name', 'LIKE', '%'.$email.'%')->get();
 
-        if (! $user instanceof User) {
-            return ApiResponse::notFound();
-        }
-
-        return ApiResponse::ok($user->toArray());
+        return ApiResponse::ok($users->toArray());
     }
 
     public function inviteUserToWorkspace(MailRequest $request, int $workspaceId): ApiResponse
@@ -49,11 +45,13 @@ class UserController extends Controller
             return ApiResponse::notFound();
         }
 
-        $user = User::where('email', $request->get('email'))->first();
-        $workspace->users()->attach($user->id); 
-        $link = url("/workspace/{$workspace->id}");
-        Mail::to($user->email)->send(new WorkspaceInvitation($workspace->name, $user->email, $link));
-        
+        $users = User::whereIn('id', $request->get('ids'))->get();
+        foreach ($users as $user) {
+            $workspace->users()->attach($user->id);
+            $link = url("/workspace/{$workspace->id}");
+            Mail::to($user->email)->send(new WorkspaceInvitation($workspace->name, $user->email, $link));
+        }
+
         return ApiResponse::ok([
             'message' => 'Invitation sent successfully!',
         ]);
