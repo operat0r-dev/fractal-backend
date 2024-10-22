@@ -31,4 +31,15 @@ class TaskController extends Controller
 
         return ApiResponse::ok();
     }
+
+    public function assignUser(Request $request, int $id): ApiResponse
+    {
+        $task = Task::find($id);
+
+        $task->update($request->only(['user_id']));
+
+        $task->load(['user', 'labels']);
+
+        return ApiResponse::ok($task->toArray());
+    }
 }

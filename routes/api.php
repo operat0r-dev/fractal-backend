@@ -19,9 +19,10 @@ Route::group(['prefix' => config('api.prefix')], function () {
         Route::GET('/users/email/{email}', [UserController::class, 'getUserByEmail']);
         Route::POST('/workspace/{workspaceId}/invite', [UserController::class, 'inviteUserToWorkspace']);
 
-        Route::POST('/workspace/create', [WorkspaceController::class, 'store']);
-        Route::PATCH('/workspace/update/{id}', [WorkspaceController::class, 'update']);
-        Route::GET('/workspace/{id}', [WorkspaceController::class, 'getOne']);
+    Route::POST('/workspace/create', [WorkspaceController::class, 'store']);
+    Route::PATCH('/workspace/update/{id}', [WorkspaceController::class, 'update']);
+    Route::GET('/workspace/{id}', [WorkspaceController::class, 'getOne']);
+    Route::GET('/workspace/{id}/users', [WorkspaceController::class, 'getWorkspaceUsers']);
 
         Route::GET('/boards/{id}', [BoardController::class, 'index']);
         Route::POST('/board/store', [BoardController::class, 'store']);
@@ -29,8 +30,9 @@ Route::group(['prefix' => config('api.prefix')], function () {
         Route::POST('/column/store', [ColumnController::class, 'store']);
         Route::PUT('/column/{id}', [ColumnController::class, 'update']);
 
-        Route::POST('/task/store', [TaskController::class, 'store']);
-        Route::PUT('/task/update/{id}', [TaskController::class, 'update']);
+    Route::POST('/task/store', [TaskController::class, 'store']);
+    Route::PUT('/task/update/{id}', [TaskController::class, 'update']);
+    Route::PUT('/task/{id}/assign-user', [TaskController::class, 'assignUser']);
 
         Route::GET('/user/workspaces', [WorkspaceController::class, 'getUserWorkspaces']);
         Route::PATCH('/user/set-user-workspace', [WorkspaceController::class, 'setUserWorkspace']);

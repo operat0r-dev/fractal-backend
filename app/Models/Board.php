@@ -18,6 +18,7 @@ class Board extends Model
         'id',
         'name',
         'workspace_id',
+        'color'
     ];
 
     protected $hidden = [

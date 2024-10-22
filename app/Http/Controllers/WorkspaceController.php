@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Responses\ApiResponse;
+use App\Models\User;
 use App\Models\Workspace;
 use App\Services\WorkspaceService;
-use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -63,6 +64,13 @@ class WorkspaceController extends Controller
         return ApiResponse::ok($workspaces->toArray());
     }
 
+    public function getWorkspaceUsers(int $id): ApiResponse
+    {
+        $users = User::whereHas('workspaces', fn ($q) => $q->where('workspace_id', $id))->get();
+
+        return ApiResponse::ok($users->toArray());
+    }
+
     public function setUserWorkspace(Request $request): ApiResponse
     {
         $user = Auth::user();
@@ -76,10 +84,22 @@ class WorkspaceController extends Controller
     public function getOne(Request $request, int $id): ApiResponse
     {
         try {
-            $workspace = Workspace::with(['boards', 'users'])->find($id);
+            $workspace = Workspace::with('boards')->find($id);
+
+            $hasAccess = User::where('id', Auth::id())
+                ->whereHas('workspaces', function ($q) use ($id) {
+                    $q->where('workspace_id', $id);
+                })->exists();
+
+            if (! $hasAccess) {
+                return ApiResponse::forbidden();
+            }
+
+            $workspace = Workspace::with(['boards', 'users'])->findOrFail($id);
 
             return ApiResponse::ok($workspace->toArray());
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::notFound();
         }
     }
 }
