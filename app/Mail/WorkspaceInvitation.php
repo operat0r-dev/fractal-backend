@@ -27,6 +27,6 @@ class WorkspaceInvitation extends Mailable
     {
         return $this
             ->subject("You're invited to join the workspace: {$this->workspaceName}")
-            ->view('emails.workspace_invitation'); 
+            ->view('emails.workspace_invitation');
     }
 }

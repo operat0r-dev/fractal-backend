@@ -32,7 +32,7 @@ class UserController extends Controller
 
     public function getUserByEmail(Request $request, string $email): ApiResponse
     {
-        $users = User::where('email', 'LIKE', '%'.$email.'%')->orWhere('name', 'LIKE', '%'.$email.'%')->get();
+        $users = User::where('email', 'LIKE', '%' . $email . '%')->orWhere('name', 'LIKE', '%' . $email . '%')->get();
 
         return ApiResponse::ok($users->toArray());
     }
