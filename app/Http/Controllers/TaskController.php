@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Column;
 use App\Models\Task;
@@ -13,7 +14,7 @@ use App\Traits\ChecksWorkspacesAccess;
 class TaskController extends Controller
 {
     use ChecksWorkspacesAccess;
-    public function store(Request $request): ApiResponse
+    public function store(TaskRequest $request): ApiResponse
     {
         $columnId = $request->get('column_id');
         $column = Column::find($columnId);
@@ -36,7 +37,7 @@ class TaskController extends Controller
         return ApiResponse::created($task->toArray());
     }
 
-    public function update(Request $request, int $id): ApiResponse
+    public function update(TaskRequest $request, int $id): ApiResponse
     {
         $task = Task::find($id);
 

@@ -20,7 +20,7 @@ class ColumnRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'board_id' => 'required|integer',
+            'board_id' => 'sometimes|required|integer',
             'seq' => 'required|integer',
             'color' => 'required|string',
         ];

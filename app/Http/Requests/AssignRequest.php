@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaskRequest extends FormRequest
+class AssignRequest extends FormRequest
 {
-    /**
+   /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -16,9 +14,7 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
-            'column_id' => 'required|integer',
-            'seq' => 'required'
+            'user_id' => 'required|integer',
         ];
     }
 }
