@@ -28,10 +28,9 @@ class WorkspaceService
         return $workspaceWithPivot;
     }
 
-    public function createDefaultWorkspace(string $name, User $user)
+    public function createDefaultWorkspace(User $user)
     {
         try {
-
             $workspace = Workspace::create([
                 'name' => 'Fractal',
                 'description' => 'Workspace dedicated to planning and executing the new product launch.',
