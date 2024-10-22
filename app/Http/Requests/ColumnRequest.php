@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Http\Responses\ApiResponse;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ColumnRequest extends FormRequest
 {
@@ -18,7 +21,13 @@ class ColumnRequest extends FormRequest
         return [
             'name' => 'required|string',
             'board_id' => 'required|integer',
-            'seq' => 'required'
+            'seq' => 'required|integer',
+            'color' => 'required|string',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(ApiResponse::badRequest('validationException', $validator->getMessageBag()->toArray())->toResponse($this));
     }
 }

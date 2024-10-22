@@ -56,7 +56,7 @@ class LabelController extends Controller
         $task = Task::findOrFail($taskId);
         $task->labels()->sync(array_values($request->get('label_ids')));
 
-        $task->load('labels');
+        $task->load(['labels', 'user']);
 
         return ApiResponse::ok($task->toArray());
     }

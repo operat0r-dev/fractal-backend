@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -20,6 +21,7 @@ class Task extends Model
         'title',
         'column_id',
         'seq',
+        'user_id',
     ];
 
     protected $hidden = [
@@ -29,11 +31,16 @@ class Task extends Model
 
     public function column()
     {
-        return $this->belongTo(Column::class);
+        return $this->belongsTo(Column::class);
     }
 
     public function labels(): BelongsToMany
     {
         return $this->belongsToMany(Label::class)->withPivot('id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

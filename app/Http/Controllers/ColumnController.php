@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ColumnRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Column;
 use Illuminate\Http\Request;
 
 class ColumnController extends Controller
 {
-    public function store(Request $request): ApiResponse
+    public function store(ColumnRequest $request): ApiResponse
     {
         $column = Column::create(
             $request->only(['name', 'board_id', 'seq', 'color']),

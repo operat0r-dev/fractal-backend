@@ -34,7 +34,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->get('password')),
         ]);
 
-        $workspace = $this->workspaceService->createDefaultWorkspace('Default', $user);
+        $this->workspaceService->createDefaultWorkspace($user);
 
         return ApiResponse::created($user->toArray());
     }
