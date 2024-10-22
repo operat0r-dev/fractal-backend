@@ -30,11 +30,8 @@ class WorkspaceService
 
     public function createDefaultWorkspace(string $name, User $user)
     {
-        $workspace = Workspace::create([
-            'name' => $name
-        ]);
-        
         try {
+
             $workspace = Workspace::create([
                 'name' => 'Fractal',
                 'description' => 'Workspace dedicated to planning and executing the new product launch.',
@@ -91,14 +88,6 @@ class WorkspaceService
     private function setCurrentWorkspace(Workspace $workspace, User $user)
     {
         $user->workspaces()->updateExistingPivot($workspace->id, ['current' => true]);
-    }
-    
-    private function createDefaultBoard(string $name, int $workspace_id)
-    {
-        $board = Board::create([
-            'name'=> $name,
-            'workspace_id' => $workspace_id
-        ]);
     }
 
     private function createBoard(string $name, int $workspace_id, string $color)

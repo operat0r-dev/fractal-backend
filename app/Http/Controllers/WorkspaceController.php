@@ -57,7 +57,7 @@ class WorkspaceController extends Controller
                 'id' => $workspace->id,
                 'name' => $workspace->name,
                 'current' => $workspace->pivot->current,
-                'description' => $workspace->description
+                'description' => $workspace->description,
             ];
         });
 
@@ -84,8 +84,6 @@ class WorkspaceController extends Controller
     public function getOne(Request $request, int $id): ApiResponse
     {
         try {
-            $workspace = Workspace::with('boards')->find($id);
-
             $hasAccess = User::where('id', Auth::id())
                 ->whereHas('workspaces', function ($q) use ($id) {
                     $q->where('workspace_id', $id);
