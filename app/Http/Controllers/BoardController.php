@@ -30,9 +30,7 @@ class BoardController extends Controller
             $workspaceId = $board->workspace_id;
             $userId = Auth::id();
     
-            if (!User::where('id', $userId)->whereHas('workspaces', function ($query) use ($workspaceId) {
-                $query->where('workspaces.id', $workspaceId); 
-            })->exists()) {
+            if (! User::find($userId)->workspaces()->where('workspace_id', $workspaceId)->exists()) {
                 return ApiResponse::forbidden();
             }
     
