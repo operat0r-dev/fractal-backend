@@ -11,9 +11,11 @@ use App\Services\WorkspaceService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\ChecksWorkspacesAccess;
 
 class WorkspaceController extends Controller
 {
+    use ChecksWorkspacesAccess;
     private WorkspaceService $workspaceService;
 
     public function __construct(
@@ -84,12 +86,9 @@ class WorkspaceController extends Controller
     public function getOne(Request $request, int $id): ApiResponse
     {
         try {
-            $hasAccess = User::where('id', Auth::id())
-                ->whereHas('workspaces', function ($q) use ($id) {
-                    $q->where('workspace_id', $id);
-                })->exists();
-
-            if (! $hasAccess) {
+            $userId = Auth::id();
+            
+            if (! $this->userHasAccessToWorkspace($id, $userId)) {
                 return ApiResponse::forbidden();
             }
 
