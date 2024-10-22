@@ -14,7 +14,8 @@ class Workspace extends Model
 {
     protected $fillable = [
         'id',
-        'name'
+        'name',
+        'description'
     ];
 
     protected $hidden = [

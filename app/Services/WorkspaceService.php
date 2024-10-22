@@ -17,7 +17,8 @@ class WorkspaceService
     public function createWorkspace(string $name, User $user)
     {
         $workspace = Workspace::create([
-            'name' => $name
+            'name' => $name,
+            'description' => $name,
         ]);
 
         $user->workspaces()->attach($workspace->id);
@@ -30,7 +31,7 @@ class WorkspaceService
     public function createDefaultWorkspace(string $name, User $user)
     {
         $workspace = Workspace::create([
-            'name' => $name
+            'name' => $name,
         ]);
 
         $user->workspaces()->attach($workspace->id);
@@ -49,12 +50,12 @@ class WorkspaceService
     {
         $user->workspaces()->updateExistingPivot($workspace->id, ['current' => true]);
     }
-    
+
     private function createDefaultBoard(string $name, int $workspace_id)
     {
         $board = Board::create([
-            'name'=> $name,
-            'workspace_id' => $workspace_id
+            'name' => $name,
+            'workspace_id' => $workspace_id,
         ]);
         $board->save();
 
@@ -67,7 +68,7 @@ class WorkspaceService
             'name' => $name,
             'board_id' => $board_id,
             'seq' => $seq,
-            'color'=> $color,
+            'color' => $color,
         ]);
         $column->save();
 
@@ -79,19 +80,19 @@ class WorkspaceService
         $task = Task::create([
             'title' => $title,
             'column_id' => $column_id,
-            'seq' => $seq
+            'seq' => $seq,
         ]);
         $task->save();
 
         return $task;
     }
-    
+
     private function createDefaultLabels(string $name, string $color, int $board_id, int $task_id)
     {
         $label = Label::create([
-            'name'=> $name,
-            'color'=> $color,
-            'board_id'=> $board_id
+            'name' => $name,
+            'color' => $color,
+            'board_id' => $board_id,
         ]);
 
         $label->save();
