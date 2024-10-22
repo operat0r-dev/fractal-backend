@@ -7,12 +7,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BoardRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Board;
-use App\Models\User;
+use App\Traits\ChecksWorkspacesAccess;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 
 class BoardController extends Controller
 {
+    use ChecksWorkspacesAccess;
     public function index(int $id): ApiResponse
     {
         try {
@@ -30,7 +31,7 @@ class BoardController extends Controller
             $workspaceId = $board->workspace_id;
             $userId = Auth::id();
     
-            if (! User::find($userId)->workspaces()->where('workspace_id', $workspaceId)->exists()) {
+            if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
                 return ApiResponse::forbidden();
             }
     

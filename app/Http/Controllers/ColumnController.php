@@ -22,7 +22,7 @@ class ColumnController extends Controller
         return ApiResponse::created($column->toArray());
     }
 
-    public function update(Request $request, int $id): ApiResponse
+    public function update(ColumnRequest $request, int $id): ApiResponse
     {
         $column = Column::find($id);
 
