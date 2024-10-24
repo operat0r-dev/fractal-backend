@@ -27,6 +27,12 @@ class Task extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+        'user_id'
+    ];
+
+    protected $with = [
+        'user',
+        'labels'
     ];
 
     public function column()
@@ -36,7 +42,7 @@ class Task extends Model
 
     public function labels(): BelongsToMany
     {
-        return $this->belongsToMany(Label::class)->withPivot('id');
+        return $this->belongsToMany(Label::class);
     }
 
     public function user(): BelongsTo

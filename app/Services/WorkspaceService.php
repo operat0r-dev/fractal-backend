@@ -74,9 +74,9 @@ class WorkspaceService
             $label2 = $this->createLabel('Medium priority', 'hsl(30, 90%, 66%)', $board->id);
             $label3 = $this->createLabel('Low priority', 'hsl(140, 90%, 66%)', $board->id);
 
-            $this->assignLabel($task3->id, $label3->id);
-            $this->assignLabel($task2->id, $label2->id);
-            $this->assignLabel($task1->id, $label1->id);
+            $this->assignLabel($label3->id, $task3->id);
+            $this->assignLabel($label2->id, $task2->id);
+            $this->assignLabel($label1->id, $task1->id);
 
             return $workspaceWithPivot;
         } catch (\Exception $e) {
@@ -94,7 +94,7 @@ class WorkspaceService
         $board = Board::create([
             'name' => $name,
             'workspace_id' => $workspace_id,
-            'color' => $color
+            'color' => $color,
         ]);
 
         return $board;
