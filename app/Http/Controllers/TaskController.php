@@ -7,20 +7,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Column;
+use App\Models\EventType;
 use App\Models\Task;
-use Illuminate\Http\Request;
+use App\Services\EventService;
 use App\Traits\ChecksWorkspacesAccess;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
     use ChecksWorkspacesAccess;
+
+    protected EventService $eventService;
+    public function __construct(EventService $eventService)
+    {
+        $this->eventService = $eventService;
+    }
+
     public function store(TaskRequest $request): ApiResponse
     {
         $columnId = $request->get('column_id');
         $column = Column::find($columnId);
         $workspaceId = $column->board()->workspace_id;
 
-        $userId = $request->user()->id; 
+        $userId = $request->user()->id;
 
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
             return ApiResponse::forbidden('You do not have access to this workspace.');
@@ -39,25 +48,48 @@ class TaskController extends Controller
 
     public function update(TaskRequest $request, int $id): ApiResponse
     {
-        $task = Task::find($id);
-
-        $workspaceId = $task->column()->board()->workspace_id; 
+        $task = Task::with('column.board')->find($id); 
+    
+        $workspaceId = $task->column->board->workspace_id;
         $userId = $request->user()->id;
-
+    
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
             return ApiResponse::forbidden();
         }
-
-        $task->update($request->only(['column_id', 'seq']));
-
+    
+        $updatedData = $request->only(['column_id', 'seq', 'title', 'description']);
+        $eventsToLog = [];
+    
+        if ($task->column->id !== $updatedData['column_id']) {
+            $eventsToLog[] = EventType::MOVED;
+        }
+    
+        if ($task->title !== $updatedData['title']) {
+            $eventsToLog[] = EventType::TYPE_TITLE_CHANGED;
+        }
+    
+        if ($task->description !== $updatedData['description']) {
+            $eventsToLog[] = EventType::TYPE_DESCRIPTION_CHANGED;
+        }
+    
+        $task->update($updatedData);
+    
+        foreach ($eventsToLog as $eventType) {
+            $this->eventService->createEvent($task->id, $userId, $eventType);
+        }
+    
         return ApiResponse::ok();
     }
 
     public function assignUser(Request $request, int $id): ApiResponse
     {
-        $task = Task::find($id);
+        $task = Task::with('column.board')->find($id);
 
-        $workspaceId = $task->column()->board()->workspace_id; 
+        if (!$task || !$task->column || !$task->column->board) {
+            return ApiResponse::notFound();
+        }
+
+        $workspaceId = $task->column->board->workspace_id;
         $userId = $request->user()->id;
 
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
@@ -65,6 +97,12 @@ class TaskController extends Controller
         }
 
         $task->update($request->only(['user_id']));
+
+        if (null === $userId) {
+            $this->eventService->createEvent($task->id, $request->user()->id, EventType::TYPE_USER_UNASSIGNED);
+        } else {
+            $this->eventService->createEvent($task->id, $request->user()->id, EventType::TYPE_USER_ASSIGNED);
+        }
 
         $task->load(['user', 'labels']);
 

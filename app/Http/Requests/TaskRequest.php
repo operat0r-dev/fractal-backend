@@ -16,7 +16,7 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'title' => 'sometimes|string',
             'column_id' => 'required|integer',
             'seq' => 'required'
         ];

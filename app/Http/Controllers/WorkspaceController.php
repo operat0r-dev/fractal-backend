@@ -8,10 +8,10 @@ use App\Http\Responses\ApiResponse;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Services\WorkspaceService;
+use App\Traits\ChecksWorkspacesAccess;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Traits\ChecksWorkspacesAccess;
 
 class WorkspaceController extends Controller
 {
