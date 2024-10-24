@@ -7,13 +7,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Column;
+use App\Models\EventType;
 use App\Models\Task;
+use App\Services\EventService;
 use App\Traits\ChecksWorkspacesAccess;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
     use ChecksWorkspacesAccess;
+
+    protected EventService $eventService;
+    public function __construct(EventService $eventService)
+    {
+        $this->eventService = $eventService;
+    }
+
     public function store(TaskRequest $request): ApiResponse
     {
         $columnId = $request->get('column_id');
@@ -39,9 +48,9 @@ class TaskController extends Controller
 
     public function update(TaskRequest $request, int $id): ApiResponse
     {
-        $task = Task::find($id);
+        $task = Task::with('column.board')->find($id);
 
-        $workspaceId = $task->column()->board()->workspace_id;
+        $workspaceId = $task->column->board->workspace_id;
         $userId = $request->user()->id;
 
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
@@ -55,9 +64,13 @@ class TaskController extends Controller
 
     public function assignUser(Request $request, int $id): ApiResponse
     {
-        $task = Task::find($id);
+        $task = Task::with('column.board')->find($id);
 
-        $workspaceId = $task->column()->board()->workspace_id;
+        if (!$task || !$task->column || !$task->column->board) {
+            return ApiResponse::notFound();
+        }
+
+        $workspaceId = $task->column->board->workspace_id;
         $userId = $request->user()->id;
 
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
@@ -65,6 +78,12 @@ class TaskController extends Controller
         }
 
         $task->update($request->only(['user_id']));
+
+        if (null === $userId) {
+            $this->eventService->createEvent($task->id, $request->user()->id, EventType::TYPE_USER_UNASSIGNED);
+        } else {
+            $this->eventService->createEvent($task->id, $request->user()->id, EventType::TYPE_USER_ASSIGNED);
+        }
 
         $task->load(['user', 'labels']);
 
