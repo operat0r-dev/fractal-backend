@@ -20,7 +20,7 @@ class EventType extends Model
 
     const TYPE_DESCRIPTION_CHANGED = 'Description Changed';
 
-    const TYPE_TITLE_UNASSIGNED = 'Title Changed';
+    const TYPE_TITLE_CHANGED = 'Title Changed';
 
     protected $fillable = [
         'id',

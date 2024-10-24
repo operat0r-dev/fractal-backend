@@ -48,17 +48,36 @@ class TaskController extends Controller
 
     public function update(TaskRequest $request, int $id): ApiResponse
     {
-        $task = Task::with('column.board')->find($id);
-
+        $task = Task::with('column.board')->find($id); 
+    
         $workspaceId = $task->column->board->workspace_id;
         $userId = $request->user()->id;
-
+    
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
             return ApiResponse::forbidden();
         }
-
-        $task->update($request->only(['column_id', 'seq']));
-
+    
+        $updatedData = $request->only(['column_id', 'seq', 'title', 'description']);
+        $eventsToLog = [];
+    
+        if ($task->column->id !== $updatedData['column_id']) {
+            $eventsToLog[] = EventType::MOVED;
+        }
+    
+        if ($task->title !== $updatedData['title']) {
+            $eventsToLog[] = EventType::TYPE_TITLE_CHANGED;
+        }
+    
+        if ($task->description !== $updatedData['description']) {
+            $eventsToLog[] = EventType::TYPE_DESCRIPTION_CHANGED;
+        }
+    
+        $task->update($updatedData);
+    
+        foreach ($eventsToLog as $eventType) {
+            $this->eventService->createEvent($task->id, $userId, $eventType);
+        }
+    
         return ApiResponse::ok();
     }
 

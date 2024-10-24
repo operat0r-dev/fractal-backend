@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $title
  * @property int $column_id
  * @property int $seq
+ * @property string $description
  */
 class Task extends Model
 {
@@ -23,6 +24,7 @@ class Task extends Model
         'column_id',
         'seq',
         'user_id',
+        'description',
     ];
 
     protected $hidden = [
