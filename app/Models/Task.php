@@ -7,12 +7,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  * @property string $title
  * @property int $column_id
  * @property int $seq
+ * @property string $description
  */
 class Task extends Model
 {
@@ -22,6 +24,7 @@ class Task extends Model
         'column_id',
         'seq',
         'user_id',
+        'description',
     ];
 
     protected $hidden = [
@@ -48,5 +51,10 @@ class Task extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class);
     }
 }
