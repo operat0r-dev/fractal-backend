@@ -7,7 +7,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ColumnRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Column;
-use Illuminate\Http\Request;
 
 class ColumnController extends Controller
 {

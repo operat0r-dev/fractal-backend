@@ -8,8 +8,8 @@ use App\Http\Requests\TaskRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Column;
 use App\Models\Task;
-use Illuminate\Http\Request;
 use App\Traits\ChecksWorkspacesAccess;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -20,7 +20,7 @@ class TaskController extends Controller
         $column = Column::find($columnId);
         $workspaceId = $column->board()->workspace_id;
 
-        $userId = $request->user()->id; 
+        $userId = $request->user()->id;
 
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
             return ApiResponse::forbidden('You do not have access to this workspace.');
@@ -41,7 +41,7 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
 
-        $workspaceId = $task->column()->board()->workspace_id; 
+        $workspaceId = $task->column()->board()->workspace_id;
         $userId = $request->user()->id;
 
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
@@ -57,7 +57,7 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
 
-        $workspaceId = $task->column()->board()->workspace_id; 
+        $workspaceId = $task->column()->board()->workspace_id;
         $userId = $request->user()->id;
 
         if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
