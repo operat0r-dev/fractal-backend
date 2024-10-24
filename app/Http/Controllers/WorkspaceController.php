@@ -75,7 +75,7 @@ class WorkspaceController extends Controller
 
     public function setUserWorkspace(Request $request): ApiResponse
     {
-        $user = Auth::user();
+        $user = $request->user();
 
         $user->workspaces()->updateExistingPivot($user->workspaces->pluck('id'), ['current' => false]);
         $user->workspaces()->updateExistingPivot($request->get('id'), ['current' => true]);

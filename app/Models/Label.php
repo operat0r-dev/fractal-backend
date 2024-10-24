@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -25,6 +26,7 @@ class Label extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+        'pivot',
     ];
 
     public function tasks(): BelongsToMany
@@ -32,7 +34,7 @@ class Label extends Model
         return $this->belongsToMany(Task::class);
     }
 
-    public function board()
+    public function board(): BelongsTo
     {
         return $this->belongsTo(Board::class);
     }

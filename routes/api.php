@@ -32,6 +32,7 @@ Route::group(['prefix' => config('api.prefix')], function () {
 
         Route::POST('/task/store', [TaskController::class, 'store']);
         Route::PUT('/task/update/{id}', [TaskController::class, 'update']);
+        Route::GET('/task/{id}', [TaskController::class, 'getOne']);
         Route::PUT('/task/{id}/assign-user', [TaskController::class, 'assignUser']);
 
         Route::GET('/user/workspaces', [WorkspaceController::class, 'getUserWorkspaces']);

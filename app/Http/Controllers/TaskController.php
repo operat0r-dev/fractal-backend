@@ -31,17 +31,11 @@ class TaskController extends Controller
 
         $userId = $request->user()->id;
 
-        if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
+        if (! $this->userHasAccessToWorkspace($workspaceId, $userId)) {
             return ApiResponse::forbidden('You do not have access to this workspace.');
         }
 
-        $task = Task::create([
-            'title' => $request->get('title'),
-            'column_id' => $request->get('column_id'),
-            'seq' => $request->get('seq'),
-        ]);
-
-        $task->load('labels');
+        $task = Task::create($request->only(['title', 'column_id', 'seq']));
 
         return ApiResponse::created($task->toArray());
     }
@@ -52,8 +46,8 @@ class TaskController extends Controller
     
         $workspaceId = $task->column->board->workspace_id;
         $userId = $request->user()->id;
-    
-        if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
+
+        if (! $this->userHasAccessToWorkspace($workspaceId, $userId)) {
             return ApiResponse::forbidden();
         }
     
@@ -81,6 +75,17 @@ class TaskController extends Controller
         return ApiResponse::ok();
     }
 
+    public function getOne(int $id): ApiResponse
+    {
+        try {
+            $task = Task::findOrFail($id);
+
+            return ApiResponse::ok($task->toArray());
+        } catch (\Exception $e) {
+            return ApiResponse::notFound($e->getMessage());
+        }
+    }
+
     public function assignUser(Request $request, int $id): ApiResponse
     {
         $task = Task::with('column.board')->find($id);
@@ -92,7 +97,7 @@ class TaskController extends Controller
         $workspaceId = $task->column->board->workspace_id;
         $userId = $request->user()->id;
 
-        if (!$this->userHasAccessToWorkspace($workspaceId, $userId)) {
+        if (! $this->userHasAccessToWorkspace($workspaceId, $userId)) {
             return ApiResponse::forbidden();
         }
 
