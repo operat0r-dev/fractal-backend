@@ -1,0 +1,18 @@
+name: Deploy test
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  deploy-test:
+    runs-on: self-hosted
+    steps:
+    - name: Pull latest changes
+      run:
+        | 
+        cd ${{ vars.BACKEND_PATH }}
+        git checkout master
+        git reset --hard HEAD
+        git pull origin master
